@@ -8,7 +8,7 @@ async function bootstrap() {
   const swaggerConfig = new SwaggerConfig();
 
   swaggerConfig.setupSwagger(`${API_BASE_PATH}/docs`, app);
-
+  app.setGlobalPrefix(API_BASE_PATH);
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
