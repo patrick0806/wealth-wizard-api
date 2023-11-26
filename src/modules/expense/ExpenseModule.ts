@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { CreateExpenseController } from './contexts/createExpense/createExpense.controller';
 import { CreateExpenseService } from './contexts/createExpense/createExpense.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ExpenseModel } from '@shared/repositories/models/expense.model';
+import { ExpenseRepository } from '@shared/repositories/expense.repository';
 
 @Module({
-  imports: [],
+  imports: [TypeOrmModule.forFeature([ExpenseModel])],
   controllers: [CreateExpenseController],
-  providers: [CreateExpenseService],
+  providers: [CreateExpenseService, ExpenseRepository],
 })
 export class ExpenseModule {}

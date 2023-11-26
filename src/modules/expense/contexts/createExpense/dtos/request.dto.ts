@@ -14,14 +14,11 @@ export class CreateExpenseRequestDTO {
   installments: number;
 
   @ApiProperty({ example: 100 })
-  installmentsValue: number;
+  installmentValue: number;
 
   @ApiProperty({ example: 200 })
-  totalPrice?: number;
+  totalValue?: number;
 
   @ApiProperty({ example: '2023-11-23' })
-  initDate: Date;
-
-  @ApiProperty({ example: '2024-01-23' })
-  endDate: Date;
+  initialDate: Date;
 }
