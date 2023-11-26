@@ -1,17 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Expense } from './schemas/expense.schema';
+import { ExpenseModel } from './schemas/expense.schema';
 import { Model } from 'mongoose';
+import { Expense } from '@shared/entities/Expense';
 
 @Injectable()
 export class ExpenseRepository {
   constructor(
-    @InjectModel(Expense.name) private expenseModel: Model<Expense>,
+    @InjectModel(ExpenseModel.name) private expenseModel: Model<ExpenseModel>,
   ) {}
 
-  async create(expense: any) {
-    console.log(expense);
+  async create(expense: Partial<ExpenseModel>): Promise<Expense> {
     const createdExpense = new this.expenseModel(expense);
-    return createdExpense.save();
+    await createdExpense.save();
+    return {
+      id: createdExpense._id,
+      description: createdExpense.description,
+      origin: createdExpense.origin,
+      category: createdExpense.category,
+      installments: createdExpense.installments,
+      installmentsValue: createdExpense.installmentsValue,
+      totalPrice: createdExpense.totalPrice,
+      initDate: createdExpense.initDate,
+      endDate: createdExpense.endDate,
+    };
   }
 }
