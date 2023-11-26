@@ -4,8 +4,8 @@ export class Expense {
   category: string;
   origin: string;
   installments: number;
-  installmentsValue: number;
-  totalPrice: number;
-  initDate: Date;
-  endDate: Date;
+  installmentValue: number;
+  totalValue: number;
+  initialDate: Date;
+  finishDate: Date;
 }

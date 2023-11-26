@@ -18,6 +18,6 @@ export const connectionSource = new DataSource({
   database: config.database,
   synchronize: false,
   logging: false,
-  entities: ['src/shared/entities/**/*{.ts,.js}'],
+  entities: ['src/shared/repositories/models/**/*{.ts,.js}'],
   migrations: ['src/config/database/migrations/*{.ts,.js}'],
 });

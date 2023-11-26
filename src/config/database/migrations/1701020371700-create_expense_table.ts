@@ -7,8 +7,9 @@ export class CreateExpenseTable1701020371700 implements MigrationInterface {
       CREATE TABLE expenses (
         id UUID NOT NULL DEFAULT uuid_generate_v4(),
         description VARCHAR(50),
+        category VARCHAR(30),
         origin VARCHAR(30),
-        installments INTEGER,
+        installments INTEGER NOT NULL DEFAULT 0,
         installment_value NUMERIC(10,2),
         total_value NUMERIC(10,2),
         initial_date DATE, 
