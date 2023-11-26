@@ -2,9 +2,10 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class CreateExpenseTable1701020371700 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
     await queryRunner.query(`
       CREATE TABLE expenses (
-        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        id UUID NOT NULL DEFAULT uuid_generate_v4(),
         description VARCHAR(50),
         origin VARCHAR(30),
         installments INTEGER,
@@ -20,5 +21,6 @@ export class CreateExpenseTable1701020371700 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP TABLE expenses;`);
+    await queryRunner.query(`DROP EXTENSION IF EXISTS "uuid-ossp";`);
   }
 }
