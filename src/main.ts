@@ -4,6 +4,7 @@ import { SwaggerConfig } from './config/SwaggerConfig';
 import { API_BASE_PATH } from '@shared/constants/apiBasePath';
 import { ValidationPipe } from '@nestjs/common';
 import { ValidationException } from '@shared/exception/ValidationException';
+import { ExceptionsFilter } from '@shared/filters/ExceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,7 +20,7 @@ async function bootstrap() {
       },
     }),
   );
-
+  app.useGlobalFilters(new ExceptionsFilter());
   app.setGlobalPrefix(API_BASE_PATH);
   await app.listen(process.env.PORT || 3000);
 }

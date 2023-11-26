@@ -3,15 +3,22 @@ import { ValidationError } from 'class-validator';
 
 export class ValidationException extends HttpException {
   constructor(validationErrors: ValidationError[]) {
-    const errorMessages = validationErrors.flatMap((error) => {
+    const fieldsErrors = validationErrors.flatMap((error) => {
       const notFollowedRules = Object.keys(error.constraints);
-      return notFollowedRules.map((rule) => error.constraints[rule]);
+      return notFollowedRules.map((rule) => {
+        return {
+          name: error.property,
+          userMessage: error.constraints[rule],
+        };
+      });
     });
 
     super(
       {
-        message: 'Invalid params',
-        erros: errorMessages,
+        title: 'Invalid params',
+        message: 'Invalid params send in request',
+        fields: fieldsErrors,
+        userMessage: 'Please check your params',
       },
       HttpStatus.BAD_REQUEST,
     );
