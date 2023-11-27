@@ -17,7 +17,7 @@ export class CreateExpenseController {
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: Problem })
   @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, type: Problem })
   @HttpCode(HttpStatus.CREATED)
-  async createExpense(@Body() data: CreateExpenseRequestDTO) {
+  async handle(@Body() data: CreateExpenseRequestDTO) {
     return this.createExpenseService.execute(data);
   }
 }

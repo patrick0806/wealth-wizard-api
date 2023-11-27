@@ -4,10 +4,12 @@ import { CreateExpenseService } from './contexts/createExpense/createExpense.ser
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ExpenseModel } from '@shared/repositories/models/expense.model';
 import { ExpenseRepository } from '@shared/repositories/expense.repository';
+import { ListExpensesController } from './contexts/listExpenses/listExepnses.controller';
+import { ListExpensesService } from './contexts/listExpenses/listExpenses.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ExpenseModel])],
-  controllers: [CreateExpenseController],
-  providers: [CreateExpenseService, ExpenseRepository],
+  controllers: [CreateExpenseController, ListExpensesController],
+  providers: [CreateExpenseService, ListExpensesService, ExpenseRepository],
 })
 export class ExpenseModule {}
