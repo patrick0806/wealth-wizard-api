@@ -29,33 +29,25 @@ export class ExpenseRepository {
     year?: number,
   ) {
     const query = this.expenseRepository
-      .createQueryBuilder('expense')
-      .select(
-        `id, 
-        description, 
-        category, 
-        origin, 
-        installments, 
-        installment_value, 
-        total_value, 
-        initial_date, 
-        finish_date,`,
-      )
-      .orderBy('expense.initialDate', 'DESC')
+      .createQueryBuilder('ex')
+      .orderBy('ex.initialDate', 'DESC')
       .skip(Math.max(0, (page - 1) * size))
       .take(size);
 
     if (month) {
-      query.andWhere('EXTRACT(MONTH FROM expense.initialDate) = :month', {
+      query.andWhere('EXTRACT(MONTH FROM ex.initialDate) = :month', {
         month,
       });
     }
     if (year) {
-      query.andWhere('EXTRACT(YEAR FROM expense.initialDate) = :year', {
+      query.andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
         year,
       });
     }
-
-    return query.execute();
+    const [content, totalElements] = await query.getManyAndCount();
+    return {
+      content: content.map(expenseModelToExpense),
+      totalElements,
+    };
   }
 }

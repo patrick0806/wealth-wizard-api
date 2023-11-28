@@ -16,6 +16,15 @@ export class ListExpensesService {
     mounth = new Date().getMonth(),
     year = new Date().getFullYear(),
   }: ListExpensesRequestDTO): Promise<ListExpensesResponseDTO> {
-    return this.expenseRepository.listExpenses(page, size, mounth, year);
+    const { content, totalElements } =
+      await this.expenseRepository.listExpenses(page, size, mounth, year);
+
+    return {
+      page: page,
+      size: size,
+      content,
+      totalElements,
+      totalPages: Math.ceil(totalElements / size),
+    };
   }
 }
