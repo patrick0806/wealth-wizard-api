@@ -1,8 +1,8 @@
 import { Column, Entity } from 'typeorm';
-import { BaseModel } from './base.model';
+import { BaseEntity } from './base.entity';
 
 @Entity({ name: 'expenses' })
-export class ExpenseModel extends BaseModel {
+export class Expense extends BaseEntity {
   @Column({ type: 'varchar', width: 50 })
   description: string;
 

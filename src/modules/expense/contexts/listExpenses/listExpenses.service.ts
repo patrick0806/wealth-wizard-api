@@ -20,11 +20,11 @@ export class ListExpensesService {
       await this.expenseRepository.listExpenses(page, size, mounth, year);
 
     return {
-      page: page,
-      size: size,
-      content,
-      totalElements,
       totalPages: Math.ceil(totalElements / size),
+      totalElements,
+      page,
+      size: content.length,
+      content,
     };
   }
 }

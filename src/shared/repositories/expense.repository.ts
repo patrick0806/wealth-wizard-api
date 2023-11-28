@@ -1,25 +1,23 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { ExpenseModel } from './models/expense.model';
 import { Repository } from 'typeorm';
-import { Expense } from '@shared/entities/expense';
-import { expenseModelToExpense } from './parsers/expenseModelToExpense';
+import { Expense } from '@shared/entities/expense.entity';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ExpenseRepository {
   constructor(
-    @InjectRepository(ExpenseModel)
-    private expenseRepository: Repository<ExpenseModel>,
+    @InjectRepository(Expense)
+    private expenseRepository: Repository<Expense>,
   ) {}
 
   async save(expense: Partial<Expense>): Promise<Expense> {
     const newExpense = await this.expenseRepository.save(expense);
-    return expenseModelToExpense(newExpense);
+    return newExpense;
   }
 
   async saveMany(expenses: Partial<Expense>[]): Promise<Expense> {
     const newExpenses = await this.expenseRepository.save(expenses);
-    return expenseModelToExpense(newExpenses[0]);
+    return newExpenses[0];
   }
 
   async listExpenses(
@@ -46,7 +44,7 @@ export class ExpenseRepository {
     }
     const [content, totalElements] = await query.getManyAndCount();
     return {
-      content: content.map(expenseModelToExpense),
+      content,
       totalElements,
     };
   }
