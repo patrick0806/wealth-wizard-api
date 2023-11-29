@@ -18,7 +18,7 @@ import path from 'path';
       entities: [path.join(__dirname, '**', '*.entity.{ts,js}')],
       migrations: ['./config/database/migrations/*.{ts,js}'],
       synchronize: false,
-      logging: false,
+      logging: true,
     }),
     ExpenseModule,
     RouterModule.register([

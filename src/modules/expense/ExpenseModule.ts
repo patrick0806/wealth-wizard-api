@@ -6,10 +6,21 @@ import { Expense } from '@shared/entities/expense.entity';
 import { ExpenseRepository } from '@shared/repositories/expense.repository';
 import { ListExpensesController } from './contexts/listExpenses/listExepnses.controller';
 import { ListExpensesService } from './contexts/listExpenses/listExpenses.service';
+import { ResumeExpenseController } from './contexts/resumeExpense/resumeExpense.controller';
+import { ResumeExpenseService } from './contexts/resumeExpense/resumeExpense.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Expense])],
-  controllers: [CreateExpenseController, ListExpensesController],
-  providers: [CreateExpenseService, ListExpensesService, ExpenseRepository],
+  controllers: [
+    CreateExpenseController,
+    ListExpensesController,
+    ResumeExpenseController,
+  ],
+  providers: [
+    CreateExpenseService,
+    ListExpensesService,
+    ResumeExpenseService,
+    ExpenseRepository,
+  ],
 })
 export class ExpenseModule {}

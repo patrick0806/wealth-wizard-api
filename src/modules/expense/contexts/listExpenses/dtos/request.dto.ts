@@ -6,8 +6,8 @@ export class ListExpensesRequestDTO {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  @ApiProperty({ example: 11, description: 'Mounth', required: false })
-  mounth: number;
+  @ApiProperty({ example: 11, description: 'Month', required: false })
+  month: number;
 
   @IsOptional()
   @IsNumber()

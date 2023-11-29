@@ -1,6 +1,7 @@
 import { ExpenseRepository } from '@shared/repositories/expense.repository';
 import { CreateExpenseRequestDTO } from './dtos/request.dto';
 import { Inject } from '@nestjs/common';
+import { addMonths } from 'date-fns';
 
 export class CreateExpenseService {
   constructor(
@@ -14,15 +15,15 @@ export class CreateExpenseService {
     if (expenseDTO.installments > 0) {
       const totalValue = expenseDTO.installmentValue * expenseDTO.installments;
 
-      const finishDate = new Date(expenseDTO.initialDate);
-      finishDate.setMonth(finishDate.getMonth() + expenseDTO.installments);
+      const finishDate = addMonths(
+        new Date(expenseDTO.initialDate),
+        expenseDTO.installments,
+      );
 
       const newExpenses = [];
 
       for (let i = 0; i < expenseDTO.installments; i++) {
-        const initialDate = new Date(expenseDTO.initialDate);
-        const month = i + 1;
-        initialDate.setMonth(initialDate.getMonth() + month);
+        const initialDate = addMonths(new Date(expenseDTO.initialDate), i);
 
         newExpenses.push({
           ...expenseDTO,
@@ -42,6 +43,7 @@ export class CreateExpenseService {
     return this.expenseRepository.save({
       ...expenseDTO,
       finishDate: expenseDTO.initialDate,
+      installmentValue: 0,
     });
   }
 }

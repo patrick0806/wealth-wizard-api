@@ -2,6 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Expense } from '@shared/entities/expense.entity';
 import { Injectable } from '@nestjs/common';
+import { addMonths, format } from 'date-fns';
 
 @Injectable()
 export class ExpenseRepository {
@@ -46,6 +47,54 @@ export class ExpenseRepository {
     return {
       content,
       totalElements,
+    };
+  }
+
+  async resumeExpense() {
+    const [year, month] = format(new Date(), 'yyyy-MM-dd').split('-');
+
+    const [sumMonthDebts] = await this.expenseRepository
+      .createQueryBuilder('ex')
+      .select('COALESCE(SUM(ex.totalValue),0) as total')
+      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
+        month: month,
+      })
+      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
+        year: year,
+      })
+      .andWhere('installments = 0')
+      .execute();
+
+    const [sumMonthInstallments] = await this.expenseRepository
+      .createQueryBuilder('ex')
+      .select('COALESCE(SUM(ex.installmentValue),0) as total')
+      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
+        month: month,
+      })
+      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
+        year: year,
+      })
+      .andWhere('installments > 0')
+      .execute();
+
+    const [nextMonthYear, nextMonth] = format(
+      addMonths(new Date(), 1),
+      'yyyy-MM-dd',
+    ).split('-');
+    const [sumNextMounthDebts] = await this.expenseRepository
+      .createQueryBuilder('ex')
+      .select('COALESCE(SUM(ex.installmentValue),0) as total')
+      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
+        month: nextMonth,
+      })
+      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
+        year: nextMonthYear,
+      })
+      .execute();
+
+    return {
+      expenseAmountThisMonth: sumMonthDebts.total + sumMonthInstallments.total,
+      expenseAmountNextMonth: sumNextMounthDebts.total,
     };
   }
 }
