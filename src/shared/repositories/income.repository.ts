@@ -13,4 +13,16 @@ export class IncomeRepository {
   async save(income: Partial<Income>) {
     return this.incomeRepository.save(income);
   }
+
+  async resumeIncome(): Promise<number> {
+    const query = await this.incomeRepository
+      .createQueryBuilder('income')
+      .select('SUM(income.value)', 'total')
+      .where(
+        'EXTRACT(MONTH FROM income.createdAt) = EXTRACT(MONTH FROM CURRENT_DATE)',
+      )
+      .getRawOne();
+
+    return Number(query.total);
+  }
 }
