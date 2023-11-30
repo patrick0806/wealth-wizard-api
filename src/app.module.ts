@@ -1,4 +1,5 @@
 import { ExpenseModule } from '@modules/expense/ExpenseModule';
+import { IncomeModule } from '@modules/income/IncomeModule';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { RouterModule } from '@nestjs/core';
@@ -21,10 +22,15 @@ import path from 'path';
       logging: true,
     }),
     ExpenseModule,
+    IncomeModule,
     RouterModule.register([
       {
         path: 'expenses',
         module: ExpenseModule,
+      },
+      {
+        path: 'incomes',
+        module: IncomeModule,
       },
     ]),
   ],
