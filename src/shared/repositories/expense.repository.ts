@@ -23,6 +23,7 @@ export class ExpenseRepository {
 
     const query = this.expenseRepository
       .createQueryBuilder('ex')
+      .leftJoinAndSelect('ex.category', 'category')
       .where(
         'ex.initialDate <= :initialDate AND ex.finishDate >= :finishDate',
         {
