@@ -13,11 +13,9 @@ export class ListExpensesService {
   async execute({
     page,
     size,
-    month = new Date().getMonth(),
-    year = new Date().getFullYear(),
   }: ListExpensesRequestDTO): Promise<ListExpensesResponseDTO> {
     const { content, totalElements } =
-      await this.expenseRepository.listExpenses(page, size, month, year);
+      await this.expenseRepository.listExpenses(page, size);
 
     return {
       totalPages: Math.ceil(totalElements / size),

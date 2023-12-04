@@ -13,7 +13,7 @@ export class CreateExpenseTable1701020371700 implements MigrationInterface {
         total_value NUMERIC(10,2),
         initial_date DATE, 
         finish_date DATE,
-        status VARCHAR(30) NOT NULL
+        status VARCHAR(30) NOT NULL,
         payment_method VARCHAR(30) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT now(),
         updated_at TIMESTAMP NOT NULL DEFAULT now()       

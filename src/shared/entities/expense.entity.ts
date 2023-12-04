@@ -1,13 +1,16 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from './base.entity';
+import { Category } from './category.entity';
+import { ExpenseStatus } from '@shared/enums/ExpenseStatus';
 
 @Entity({ name: 'expenses' })
 export class Expense extends BaseEntity {
   @Column({ type: 'varchar', width: 50 })
   description: string;
 
-  @Column({ type: 'varchar', width: 30 })
-  category: string;
+  @ManyToOne(() => Category)
+  @JoinColumn({ name: 'category_id' })
+  category: Category;
 
   @Column({ type: 'integer', default: 0 })
   installments: number;
@@ -29,7 +32,7 @@ export class Expense extends BaseEntity {
   @Column({ name: 'finish_date', type: 'date' })
   finishDate: Date;
 
-  @Column({ type: 'varchar', width: 20, default: 'pending' })
+  @Column({ type: 'varchar', width: 20, default: ExpenseStatus.PENDING })
   status: string;
 
   @Column({ name: 'payment_method', type: 'varchar', width: 30 })

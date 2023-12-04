@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Category } from '@shared/entities/category.entity';
+import { CategoryType } from '@shared/enums/CategoryTypes';
+import { ExpenseStatus } from '@shared/enums/ExpenseStatus';
 
 export class CreateExpenseRequestDTO {
   @ApiProperty({ example: 'awr5we235fcgbnyugcxdfpl' })
@@ -7,11 +10,17 @@ export class CreateExpenseRequestDTO {
   @ApiProperty({ example: 'Maquina de lavar' })
   description: string;
 
-  @ApiProperty({ example: 'HOUSE' })
-  category: string; //TODO: ENUM
+  @ApiProperty({
+    example: {
+      id: 1,
+      description: 'HOUSE',
+      type: CategoryType.EXPENSE,
+    },
+  })
+  category: Category;
 
   @ApiProperty({ example: 'Cartão de crédito luiza' })
-  origin: string;
+  paymentMethod: string;
 
   @ApiProperty({ example: 2 })
   installments: number;
@@ -27,4 +36,7 @@ export class CreateExpenseRequestDTO {
 
   @ApiProperty({ example: '2024-01-23' })
   endDate: Date;
+
+  @ApiProperty({ example: ExpenseStatus.PENDING })
+  status: string;
 }

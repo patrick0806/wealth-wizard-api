@@ -2,7 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Expense } from '@shared/entities/expense.entity';
 import { Injectable } from '@nestjs/common';
-import { addMonths, format } from 'date-fns';
+import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
+import { ExpenseStatus } from '@shared/enums/ExpenseStatus';
 
 @Injectable()
 export class ExpenseRepository {
@@ -16,33 +17,23 @@ export class ExpenseRepository {
     return newExpense;
   }
 
-  async saveMany(expenses: Partial<Expense>[]): Promise<Expense> {
-    const newExpenses = await this.expenseRepository.save(expenses);
-    return newExpenses[0];
-  }
+  async listExpenses(page: number = 0, size: number = 10) {
+    const initialDate = startOfMonth(new Date());
+    const finishDate = endOfMonth(new Date());
 
-  async listExpenses(
-    page: number = 0,
-    size: number = 10,
-    month?: number,
-    year?: number,
-  ) {
     const query = this.expenseRepository
       .createQueryBuilder('ex')
+      .where(
+        'ex.initialDate <= :initialDate AND ex.finishDate >= :finishDate',
+        {
+          initialDate,
+          finishDate,
+        },
+      )
+      .andWhere('ex.status = :status', { status: ExpenseStatus.PENDING })
       .orderBy('ex.initialDate', 'DESC')
       .skip(Math.max(0, (page - 1) * size))
       .take(size);
-
-    if (month) {
-      query.andWhere('EXTRACT(MONTH FROM ex.initialDate) = :month', {
-        month,
-      });
-    }
-    if (year) {
-      query.andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
-        year,
-      });
-    }
     const [content, totalElements] = await query.getManyAndCount();
     return {
       content,
@@ -51,45 +42,52 @@ export class ExpenseRepository {
   }
 
   async resumeExpense() {
-    const [year, month] = format(new Date(), 'yyyy-MM-dd').split('-');
+    const initialDate = startOfMonth(new Date());
+    const finishDate = endOfMonth(new Date());
 
     const [sumMonthDebts] = await this.expenseRepository
       .createQueryBuilder('ex')
       .select('COALESCE(SUM(ex.totalValue),0) as total')
-      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
-        month: month,
-      })
-      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
-        year: year,
-      })
+      .where(
+        'ex.initialDate <= :initialDate AND ex.finishDate >= :finishDate',
+        {
+          initialDate,
+          finishDate,
+        },
+      )
       .andWhere('installments = 0')
+      .andWhere('ex.status = :status', { status: ExpenseStatus.PENDING })
       .execute();
 
     const [sumMonthInstallments] = await this.expenseRepository
       .createQueryBuilder('ex')
       .select('COALESCE(SUM(ex.installmentValue),0) as total')
-      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
-        month: month,
-      })
-      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
-        year: year,
-      })
+      .where(
+        'ex.initialDate <= :initialDate AND ex.finishDate >= :finishDate',
+        {
+          initialDate,
+          finishDate,
+        },
+      )
       .andWhere('installments > 0')
+      .andWhere('ex.status = :status', { status: ExpenseStatus.PENDING })
       .execute();
 
-    const [nextMonthYear, nextMonth] = format(
-      addMonths(new Date(), 1),
-      'yyyy-MM-dd',
-    ).split('-');
+    const nextMonth = addMonths(initialDate, 1);
+    const initNextMonth = startOfMonth(nextMonth);
+    const finishNextMonth = endOfMonth(nextMonth);
     const [sumNextMounthDebts] = await this.expenseRepository
       .createQueryBuilder('ex')
       .select('COALESCE(SUM(ex.installmentValue),0) as total')
-      .where('EXTRACT(MONTH FROM ex.initialDate) = :month', {
-        month: nextMonth,
-      })
-      .andWhere('EXTRACT(YEAR FROM ex.initialDate) = :year', {
-        year: nextMonthYear,
-      })
+      .where(
+        'ex.initialDate <= :initialDate AND ex.finishDate >= :finishDate',
+        {
+          initialDate: initNextMonth,
+          finishDate: finishNextMonth,
+        },
+      )
+      .andWhere('installments > 0')
+      .andWhere('ex.status = :status', { status: ExpenseStatus.PENDING })
       .execute();
 
     return {

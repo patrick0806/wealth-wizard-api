@@ -1,18 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsString, Min } from 'class-validator';
+import { Category } from '@shared/entities/category.entity';
+import {
+  IsDateString,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateExpenseRequestDTO {
   @IsString()
   @ApiProperty({ example: 'Maquina de lavar' })
   description: string;
 
-  @IsString()
-  @ApiProperty({ example: 'HOUSE' })
-  category: string; //TODO: ENUM
+  @IsObject()
+  @ApiProperty({
+    example: {
+      id: 1,
+    },
+  })
+  category: Category;
 
   @IsString()
   @ApiProperty({ example: 'Cartão de crédito luiza' })
-  origin: string;
+  paymentMethod: string;
 
   @IsNumber()
   @Min(0)
@@ -24,12 +36,17 @@ export class CreateExpenseRequestDTO {
   @ApiProperty({ example: 100 })
   installmentValue: number;
 
+  @IsOptional()
   @IsNumber()
   @Min(0)
   @ApiProperty({ example: 200 })
   totalValue?: number;
 
   @IsDateString()
-  @ApiProperty({ example: '2023-11-23' })
+  @ApiProperty({ example: '2023-12-01' })
   initialDate: Date;
+
+  @IsString()
+  @ApiProperty({ example: 'PENDING' })
+  status: string;
 }

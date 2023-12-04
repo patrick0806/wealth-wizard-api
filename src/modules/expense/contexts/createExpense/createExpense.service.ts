@@ -1,6 +1,6 @@
 import { ExpenseRepository } from '@shared/repositories/expense.repository';
 import { CreateExpenseRequestDTO } from './dtos/request.dto';
-import { Inject } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { addMonths } from 'date-fns';
 
 export class CreateExpenseService {
@@ -12,38 +12,26 @@ export class CreateExpenseService {
   async execute(
     expenseDTO: CreateExpenseRequestDTO,
   ): Promise<CreateExpenseRequestDTO> {
+    let finishDate = new Date(expenseDTO.initialDate);
+    let totalValue: number = expenseDTO.totalValue;
+    let installmentValue = expenseDTO.installmentValue;
+
     if (expenseDTO.installments > 0) {
-      const totalValue = expenseDTO.installmentValue * expenseDTO.installments;
-
-      const finishDate = addMonths(
-        new Date(expenseDTO.initialDate),
-        expenseDTO.installments,
-      );
-
-      const newExpenses = [];
-
-      for (let i = 0; i < expenseDTO.installments; i++) {
-        const initialDate = addMonths(new Date(expenseDTO.initialDate), i);
-
-        newExpenses.push({
-          ...expenseDTO,
-          initialDate,
-          finishDate,
-          totalValue,
+      finishDate = addMonths(finishDate, expenseDTO.installments);
+      totalValue = expenseDTO.installmentValue * expenseDTO.installments;
+    } else {
+      if (!totalValue || totalValue <= 0)
+        throw new BadRequestException({
+          message: 'Total value must be greater than 0 ',
         });
-      }
-
-      return this.expenseRepository.saveMany(newExpenses);
-    }
-
-    if (!expenseDTO.totalValue) {
-      throw new Error('Total value is required');
+      installmentValue = 0;
     }
 
     return this.expenseRepository.save({
       ...expenseDTO,
-      finishDate: expenseDTO.initialDate,
-      installmentValue: 0,
+      finishDate,
+      installmentValue,
+      totalValue,
     });
   }
 }
