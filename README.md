@@ -94,7 +94,7 @@ I still don't know how long this project will take to finish but I want to add s
 
 ## How create and run migrations
 ```bash
-  npx typeorm migration:create <path>/migration_name
+  npx typeorm migration:create src/config/database/migrations/<migration name>
 ```
 
 ```bash
