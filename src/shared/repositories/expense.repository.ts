@@ -93,8 +93,9 @@ export class ExpenseRepository {
       .execute();
 
     return {
-      expenseAmountThisMonth: sumMonthDebts.total + sumMonthInstallments.total,
-      expenseAmountNextMonth: sumNextMounthDebts.total,
+      expenseAmountThisMonth:
+        Number(sumMonthDebts.total) + Number(sumMonthInstallments.total),
+      expenseAmountNextMonth: Number(sumNextMounthDebts.total),
     };
   }
 }

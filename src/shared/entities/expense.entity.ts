@@ -9,9 +9,6 @@ export class Expense extends BaseEntity {
   @Column({ type: 'varchar', width: 30 })
   category: string;
 
-  @Column({ type: 'varchar', width: 30 })
-  origin: string;
-
   @Column({ type: 'integer', default: 0 })
   installments: number;
 
@@ -31,4 +28,12 @@ export class Expense extends BaseEntity {
 
   @Column({ name: 'finish_date', type: 'date' })
   finishDate: Date;
+
+  @Column({ type: 'varchar', width: 20, default: 'pending' })
+  status: string;
+
+  @Column({ name: 'payment_method', type: 'varchar', width: 30 })
+  paymentMethod: string;
+
+  //notes -- future field
 }

@@ -26,6 +26,7 @@ export class ListExpensesResponseDTO {
         installmentValue: 0,
         totalValue: 0,
         initialDate: new Date(),
+        finishDate: new Date(),
       },
     ],
     description: 'Expenses',

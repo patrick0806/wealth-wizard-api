@@ -1,3 +1,4 @@
+import { CategoryModule } from '@modules/category/CategoryModule';
 import { ExpenseModule } from '@modules/expense/ExpenseModule';
 import { IncomeModule } from '@modules/income/IncomeModule';
 import { Module } from '@nestjs/common';
@@ -23,6 +24,7 @@ import path from 'path';
     }),
     ExpenseModule,
     IncomeModule,
+    CategoryModule,
     RouterModule.register([
       {
         path: 'expenses',
@@ -31,6 +33,10 @@ import path from 'path';
       {
         path: 'incomes',
         module: IncomeModule,
+      },
+      {
+        path: 'categories',
+        module: CategoryModule,
       },
     ]),
   ],

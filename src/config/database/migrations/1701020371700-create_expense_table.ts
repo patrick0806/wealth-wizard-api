@@ -8,12 +8,13 @@ export class CreateExpenseTable1701020371700 implements MigrationInterface {
         id UUID NOT NULL DEFAULT uuid_generate_v4(),
         description VARCHAR(50),
         category VARCHAR(30),
-        origin VARCHAR(30),
         installments INTEGER NOT NULL DEFAULT 0,
         installment_value NUMERIC(10,2),
         total_value NUMERIC(10,2),
         initial_date DATE, 
         finish_date DATE,
+        status VARCHAR(30) NOT NULL
+        payment_method VARCHAR(30) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT now(),
         updated_at TIMESTAMP NOT NULL DEFAULT now()       
       );
