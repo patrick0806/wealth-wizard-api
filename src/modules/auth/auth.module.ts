@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { SignInService } from './contexts/signIn/signIn.service';
 import { JwtModule } from '@nestjs/jwt';
 import { SignInController } from './contexts/signIn/signIn.controller';
+import { SignUpService } from './contexts/signUp/signUp.service';
+import { SignUpController } from './contexts/signUp/signUp.controller';
 
 @Module({
   imports: [
@@ -13,8 +15,8 @@ import { SignInController } from './contexts/signIn/signIn.controller';
     }),
     UsersModule,
   ],
-  controllers: [SignInController],
-  providers: [SignInService],
+  controllers: [SignInController, SignUpController],
+  providers: [SignInService, SignUpService],
   exports: [],
 })
 export class AuthModule {}

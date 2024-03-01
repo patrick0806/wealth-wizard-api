@@ -21,9 +21,11 @@ CREATE TABLE IF NOT EXISTS "incomes" (
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"password" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "email" UNIQUE("name")
+	CONSTRAINT "email" UNIQUE("email")
 );
 --> statement-breakpoint
 DO $$ BEGIN
