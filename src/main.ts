@@ -24,7 +24,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalFilters(new ExceptionsFilter(), new UnexpectedExceptionFilter());
+  app.useGlobalFilters(new UnexpectedExceptionFilter(), new ExceptionsFilter());
   app.setGlobalPrefix(API_BASE_PATH);
   app.enableCors();
   await app.listen(process.env.PORT || 3000);
