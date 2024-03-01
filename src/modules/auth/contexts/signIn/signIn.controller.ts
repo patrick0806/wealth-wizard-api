@@ -4,6 +4,7 @@ import { SignInRequestDTO } from './dtos/request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SignInResponseDTO } from './dtos/response.dto';
 import { Public } from '@shared/decorators/public.decorator';
+import { ExceptionDTO } from '@shared/filters/exception.dto';
 
 @Controller()
 export class SignInController {
@@ -11,11 +12,11 @@ export class SignInController {
 
   @ApiOperation({ summary: 'Login in app' })
   @ApiResponse({ status: HttpStatus.OK, type: SignInResponseDTO })
-  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, type: SignInResponseDTO })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: SignInResponseDTO })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, type: ExceptionDTO })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ExceptionDTO })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
-    type: SignInResponseDTO,
+    type: ExceptionDTO,
   })
   @Public()
   @Post()
