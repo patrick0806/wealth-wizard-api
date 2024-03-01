@@ -1,17 +1,17 @@
-import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { SignUpService } from './signUp.service';
 import { Public } from '@shared/decorators/public.decorator';
 import { SignUpRequestDTO } from './dtos/request.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SignUpResponseDTO } from './dtos/response.dto';
 import { ExceptionDTO } from '@shared/filters/exception.dto';
+import { Response } from 'express';
 
 @Controller()
 export class SignUpController {
   constructor(private signUpService: SignUpService) {}
 
   @ApiOperation({ summary: 'Create User' })
-  @ApiResponse({ status: HttpStatus.OK, type: SignUpResponseDTO })
+  @ApiResponse({ status: HttpStatus.CREATED })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, type: ExceptionDTO })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, type: ExceptionDTO })
   @ApiResponse({
@@ -20,7 +20,9 @@ export class SignUpController {
   })
   @Public()
   @Post('/sign-up')
-  async handle(@Body() signUpData: SignUpRequestDTO) {
-    return this.signUpService.execute(signUpData);
+  async handle(@Body() signUpData: SignUpRequestDTO, @Res() res: Response) {
+    const { accessToken } = await this.signUpService.execute(signUpData);
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    res.send();
   }
 }
