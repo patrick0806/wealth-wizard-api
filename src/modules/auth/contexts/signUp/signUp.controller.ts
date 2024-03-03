@@ -20,7 +20,10 @@ export class SignUpController {
   })
   @Public()
   @Post('/sign-up')
-  async handle(@Body() signUpData: SignUpRequestDTO, @Res() res: Response) {
+  async handle(
+    @Body() signUpData: SignUpRequestDTO,
+    @Res() res: Response,
+  ): Promise<void> {
     const { accessToken } = await this.signUpService.execute(signUpData);
     res.setHeader('Authorization', `Bearer ${accessToken}`);
     res.send();

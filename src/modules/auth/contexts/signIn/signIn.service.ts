@@ -1,23 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { FindUserByEmailService } from '@modules/users/contexts/findUserByEmail/findUserByEmail.service';
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponseDTO } from './dtos/response.dto';
 import { UnauthorizedException } from '@shared/exceptions/UnauthorizedException';
+import { UserRepository } from '@shared/repositories/user.repository';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class SignInService {
   constructor(
-    private findUserByEmail: FindUserByEmailService,
+    private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
   async execute(email: string, password: string): Promise<SignInResponseDTO> {
-    const user = await this.findUserByEmail.excecute(email);
+    const user = await this.userRepository.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('email or password invalid');
     }
 
-    if (user.password !== password) {
+    const isValidPassword = await compare(password, user.password);
+    if (!isValidPassword) {
       throw new UnauthorizedException('email or password invalid');
     }
 
