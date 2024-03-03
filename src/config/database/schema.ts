@@ -18,6 +18,7 @@ export const expenses = pgTable('expenses', {
   description: text('description').notNull(),
   value: decimal('value', { precision: 10, scale: 2 }),
   date: timestamp('date').notNull(),
+  category: text('category').notNull(),
   userId: uuid('user_id')
     .notNull()
     .references(() => users.id),
@@ -34,6 +35,7 @@ export const incomes = pgTable('incomes', {
   description: text('description').notNull(),
   value: decimal('value', { precision: 10, scale: 2 }),
   date: timestamp('date').notNull(),
+  category: text('category').notNull(),
   userId: uuid('user_id')
     .notNull()
     .references(() => users.id),
