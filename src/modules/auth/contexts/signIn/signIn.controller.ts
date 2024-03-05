@@ -8,11 +8,13 @@ import {
 } from '@nestjs/common';
 import { SignInService } from './signIn.service';
 import { SignInRequestDTO } from './dtos/request.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from '@shared/decorators/public.decorator';
 import { ExceptionDTO } from '@shared/filters/exception.dto';
 import { Response } from 'express';
+import { API_TAGS } from '@shared/constants/apiTags';
 
+@ApiTags(API_TAGS.AUTH)
 @Controller()
 export class SignInController {
   constructor(private signInService: SignInService) {}

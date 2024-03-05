@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsString, Min } from 'class-validator';
+import { IsDateString, IsString, Min } from 'class-validator';
 
 export class CreateIncomeRequestDTO {
   @ApiProperty({ example: 'b4d9d9d3-0e9f-4a5c-9c5f-3e9e9e9e9e9e' })
@@ -14,7 +14,7 @@ export class CreateIncomeRequestDTO {
   @ApiProperty({ example: 'Salary' })
   description: string;
 
-  @IsDate()
+  @IsDateString()
   @ApiProperty({ example: '2022-01-01' })
   date: Date;
 

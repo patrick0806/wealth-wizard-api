@@ -9,7 +9,9 @@ export class CreateIncomeService {
 
   async execute(
     incomeData: CreateIncomeRequestDTO,
+    userId: string,
   ): Promise<CreateIncomeResponseDTO> {
+    incomeData.userId = userId;
     return await this.incomeRepository.createIncome(incomeData);
   }
 }

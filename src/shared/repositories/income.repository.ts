@@ -15,7 +15,7 @@ export class IncomeRepository {
         id: randomUUID(),
         description: income.description,
         value: income.value.toPrecision(2),
-        date: income.date,
+        date: new Date(income.date),
         category: income.category,
         userId: income.userId,
       })
