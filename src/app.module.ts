@@ -1,4 +1,5 @@
 import { AuthModule } from '@modules/auth/auth.module';
+import { ExpenseModule } from '@modules/expenses/expenses.module';
 import { IncomesModule } from '@modules/incomes/incomes.module';
 import { UsersModule } from '@modules/users/users.module';
 import { Module } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { AuthGuard } from '@shared/guards/auth.guard';
     UsersModule,
     AuthModule,
     IncomesModule,
+    ExpenseModule,
     RouterModule.register([
       {
         path: 'auth',
@@ -22,6 +24,10 @@ import { AuthGuard } from '@shared/guards/auth.guard';
       {
         path: 'incomes',
         module: IncomesModule,
+      },
+      {
+        path: 'expenses',
+        module: ExpenseModule,
       },
     ]),
   ],
